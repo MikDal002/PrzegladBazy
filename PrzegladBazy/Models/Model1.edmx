@@ -1,0 +1,1142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="wizualizacja2Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="atrybuty_zdarzen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'wizualizacja2.dbo.elementy_grup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="elementy_grup">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+            <PropertyRef Name="gateId" />
+          </Key>
+          <Property Name="idGrupy" Type="int" Nullable="false" />
+          <Property Name="gateId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'wizualizacja2.dbo.elementy_grup_raportowych' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="elementy_grup_raportowych">
+          <Key>
+            <PropertyRef Name="numerGrupyRaportowej" />
+            <PropertyRef Name="gateId" />
+            <PropertyRef Name="rodzajPomiaru" />
+          </Key>
+          <Property Name="numerGrupyRaportowej" Type="int" Nullable="false" />
+          <Property Name="gateId" Type="int" Nullable="false" />
+          <Property Name="rodzajPomiaru" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="grupy">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+          </Key>
+          <Property Name="idGrupy" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="grupy_raportowe">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+          </Key>
+          <Property Name="idGrupy" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwaGrupy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="numerGrupy" Type="int" Nullable="false" />
+          <Property Name="czy_analogowo_cyfrowa" Type="bit" />
+        </EntityType>
+        <EntityType Name="komunikaty">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="data_utworzenia" Type="bigint" Nullable="false" />
+          <Property Name="tresc" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="zmiana" Type="int" Nullable="false" />
+          <Property Name="data_waznosci" Type="char" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="miejsca_pomiaru">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="miejsce" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="multicont">
+          <Key>
+            <PropertyRef Name="idOdczytu" />
+          </Key>
+          <Property Name="idOdczytu" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="wartosc" Type="float" Nullable="false" />
+          <Property Name="jednostka" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="gateId" Type="int" Nullable="false" />
+          <Property Name="czas" Type="char" MaxLength="19" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'wizualizacja2.dbo.objetosci_zbiornikow' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="objetosci_zbiornikow">
+          <Key>
+            <PropertyRef Name="nazwa" />
+            <PropertyRef Name="wysokosc" />
+            <PropertyRef Name="objetosc" />
+          </Key>
+          <Property Name="nazwa" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="wysokosc" Type="int" Nullable="false" />
+          <Property Name="objetosc" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pomiary">
+          <Key>
+            <PropertyRef Name="idPomiaru" />
+          </Key>
+          <Property Name="idPomiaru" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gateId" Type="int" Nullable="false" />
+          <Property Name="value" Type="float" Nullable="false" />
+          <Property Name="time" Type="bigint" Nullable="false" />
+          <Property Name="idUzytkownika" Type="int" Nullable="false" />
+          <Property Name="data_wprowadzenia" Type="bigint" Nullable="false" />
+          <Property Name="id_rodzaju_pomiaru" Type="int" Nullable="false" />
+          <Property Name="miejsce" Type="int" />
+          <Property Name="uwaga" Type="varchar" MaxLength="255" />
+          <Property Name="czy_sprzedaz" Type="bit" Nullable="false" />
+          <Property Name="planowana_data" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="id_zlecenia_wywozowego" Type="int" />
+          <Property Name="id_zlecenia_przywozowego" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'wizualizacja2.dbo.pomiary_grup' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="pomiary_grup">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+            <PropertyRef Name="idPomiaru" />
+          </Key>
+          <Property Name="idGrupy" Type="int" Nullable="false" />
+          <Property Name="idPomiaru" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'wizualizacja2.dbo.potwierdzone_komunikaty' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="potwierdzone_komunikaty">
+          <Key>
+            <PropertyRef Name="id_pracownik" />
+            <PropertyRef Name="id_komunikatu" />
+          </Key>
+          <Property Name="id_pracownik" Type="int" Nullable="false" />
+          <Property Name="id_komunikatu" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pracownik_sterowni">
+          <Key>
+            <PropertyRef Name="id_pracownika" />
+          </Key>
+          <Property Name="id_pracownika" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="imie" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="nazwisko" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="haslo" Type="char" MaxLength="32" Nullable="false" />
+          <Property Name="czy_admin" Type="bit" Nullable="false" />
+          <Property Name="login" Type="varchar" MaxLength="25" />
+          <Property Name="aktywny" Type="bit" Nullable="false" />
+          <Property Name="numer_telefonu" Type="varchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <EntityType Name="rodzaje_bramek_zdarzen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="rodzaje_pomiarow">
+          <Key>
+            <PropertyRef Name="idPomiaru" />
+          </Key>
+          <Property Name="idPomiaru" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Slownik">
+          <Key>
+            <PropertyRef Name="slowId" />
+          </Key>
+          <Property Name="slowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecNo" Type="smallint" Nullable="false" />
+          <Property Name="LongGate" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="idStacji" Type="tinyint" Nullable="false" />
+          <Property Name="rodzajBramki" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="rodzajPomiaru" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="gateId" Type="int" Nullable="false" />
+          <Property Name="minimum" Type="smallint" />
+          <Property Name="maksimum" Type="smallint" />
+          <Property Name="zdarz" Type="bit" />
+          <Property Name="rodz_dla_zdarz" Type="int" />
+        </EntityType>
+        <EntityType Name="slownik_bramek_zewnetrznych">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="aktywna" Type="bit" Nullable="false" />
+          <Property Name="stworzono_zdarzenie" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uprawnienia">
+          <Key>
+            <PropertyRef Name="idUprawnienia" />
+          </Key>
+          <Property Name="idUprawnienia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="poziom" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uprawnienia_sterowni">
+          <Key>
+            <PropertyRef Name="idUprawnienia" />
+          </Key>
+          <Property Name="idUprawnienia" Type="int" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uzytkownicy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="login" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="haslo" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="poziom" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="wielkosci_mierzone">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nazwa" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="zdarzenia_sterownia">
+          <Key>
+            <PropertyRef Name="id_zdarzenia" />
+          </Key>
+          <Property Name="id_zdarzenia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_pracownika_sterowni" Type="int" Nullable="false" />
+          <Property Name="id_bramki" Type="int" Nullable="false" />
+          <Property Name="data_zdarzenia" Type="bigint" Nullable="false" />
+          <Property Name="opis_zdarzenia" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="atrybut" Type="int" Nullable="false" />
+          <Property Name="termin" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="id_etapu" Type="int" Nullable="false" />
+          <Property Name="opis_bramki" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="czy_dotyczy_bramki" Type="bit" />
+        </EntityType>
+        <EntityType Name="zewnetrzne_zrodla_zdarzen">
+          <Key>
+            <PropertyRef Name="nazwa" />
+          </Key>
+          <Property Name="nazwa" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="atrybut" Type="int" Nullable="false" />
+          <Property Name="termin" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="zmiany">
+          <Key>
+            <PropertyRef Name="id_zmiany" />
+          </Key>
+          <Property Name="id_zmiany" Type="int" Nullable="false" />
+          <Property Name="godzina_poczatku" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__elementy___idGru__117F9D94">
+          <End Role="grupy" Type="Self.grupy" Multiplicity="1" />
+          <End Role="elementy_grup" Type="Self.elementy_grup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grupy">
+              <PropertyRef Name="idGrupy" />
+            </Principal>
+            <Dependent Role="elementy_grup">
+              <PropertyRef Name="idGrupy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK__pomiary__gateId__2E1BDC42' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK__pomiary__gateId__2E1BDC42" />-->
+        <Association Name="FK__pomiary__id_rodz__29572725">
+          <End Role="rodzaje_pomiarow" Type="Self.rodzaje_pomiarow" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__id_rodz__2C3393D0">
+          <End Role="rodzaje_pomiarow" Type="Self.rodzaje_pomiarow" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__id_rodz__2F10007B">
+          <End Role="rodzaje_pomiarow" Type="Self.rodzaje_pomiarow" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__2A4B4B5E">
+          <End Role="uzytkownicy" Type="Self.uzytkownicy" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__2D27B809">
+          <End Role="uzytkownicy" Type="Self.uzytkownicy" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__300424B4">
+          <End Role="uzytkownicy" Type="Self.uzytkownicy" Multiplicity="1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__miejsce__38996AB5">
+          <End Role="miejsca_pomiaru" Type="Self.miejsca_pomiaru" Multiplicity="0..1" />
+          <End Role="pomiary" Type="Self.pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="miejsca_pomiaru">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="miejsce" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary_g__idGru__1367E606">
+          <End Role="grupy" Type="Self.grupy" Multiplicity="1" />
+          <End Role="pomiary_grup" Type="Self.pomiary_grup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grupy">
+              <PropertyRef Name="idGrupy" />
+            </Principal>
+            <Dependent Role="pomiary_grup">
+              <PropertyRef Name="idGrupy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary_g__idPom__1920BF5C">
+          <End Role="rodzaje_pomiarow" Type="Self.rodzaje_pomiarow" Multiplicity="1" />
+          <End Role="pomiary_grup" Type="Self.pomiary_grup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary_grup">
+              <PropertyRef Name="idPomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <!--Errors Found During Generation:
+warning 6035: The relationship 'FK__uzytkowni__pozio__239E4DCF' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+        <Association Name="FK__uzytkowni__pozio__239E4DCF" />-->
+        <EntityContainer Name="wizualizacja2ModelStoreContainer">
+          <EntitySet Name="atrybuty_zdarzen" EntityType="Self.atrybuty_zdarzen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="grupy" EntityType="Self.grupy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="grupy_raportowe" EntityType="Self.grupy_raportowe" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="komunikaty" EntityType="Self.komunikaty" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="miejsca_pomiaru" EntityType="Self.miejsca_pomiaru" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="multicont" EntityType="Self.multicont" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pomiary" EntityType="Self.pomiary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pracownik_sterowni" EntityType="Self.pracownik_sterowni" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="rodzaje_bramek_zdarzen" EntityType="Self.rodzaje_bramek_zdarzen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="rodzaje_pomiarow" EntityType="Self.rodzaje_pomiarow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Slownik" EntityType="Self.Slownik" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="slownik_bramek_zewnetrznych" EntityType="Self.slownik_bramek_zewnetrznych" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="uprawnienia" EntityType="Self.uprawnienia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="uprawnienia_sterowni" EntityType="Self.uprawnienia_sterowni" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="uzytkownicy" EntityType="Self.uzytkownicy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="wielkosci_mierzone" EntityType="Self.wielkosci_mierzone" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="zdarzenia_sterownia" EntityType="Self.zdarzenia_sterownia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="zewnetrzne_zrodla_zdarzen" EntityType="Self.zewnetrzne_zrodla_zdarzen" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="zmiany" EntityType="Self.zmiany" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="elementy_grup" EntityType="Self.elementy_grup" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [elementy_grup].[idGrupy] AS [idGrupy], 
+    [elementy_grup].[gateId] AS [gateId]
+    FROM [dbo].[elementy_grup] AS [elementy_grup]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="elementy_grup_raportowych" EntityType="Self.elementy_grup_raportowych" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [elementy_grup_raportowych].[numerGrupyRaportowej] AS [numerGrupyRaportowej], 
+    [elementy_grup_raportowych].[gateId] AS [gateId], 
+    [elementy_grup_raportowych].[rodzajPomiaru] AS [rodzajPomiaru]
+    FROM [dbo].[elementy_grup_raportowych] AS [elementy_grup_raportowych]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="objetosci_zbiornikow" EntityType="Self.objetosci_zbiornikow" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [objetosci_zbiornikow].[nazwa] AS [nazwa], 
+    [objetosci_zbiornikow].[wysokosc] AS [wysokosc], 
+    [objetosci_zbiornikow].[objetosc] AS [objetosc]
+    FROM [dbo].[objetosci_zbiornikow] AS [objetosci_zbiornikow]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="pomiary_grup" EntityType="Self.pomiary_grup" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [pomiary_grup].[idGrupy] AS [idGrupy], 
+    [pomiary_grup].[idPomiaru] AS [idPomiaru]
+    FROM [dbo].[pomiary_grup] AS [pomiary_grup]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="potwierdzone_komunikaty" EntityType="Self.potwierdzone_komunikaty" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [potwierdzone_komunikaty].[id_pracownik] AS [id_pracownik], 
+    [potwierdzone_komunikaty].[id_komunikatu] AS [id_komunikatu]
+    FROM [dbo].[potwierdzone_komunikaty] AS [potwierdzone_komunikaty]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__elementy___idGru__117F9D94" Association="Self.FK__elementy___idGru__117F9D94">
+            <End Role="grupy" EntitySet="grupy" />
+            <End Role="elementy_grup" EntitySet="elementy_grup" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__29572725" Association="Self.FK__pomiary__id_rodz__29572725">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__2C3393D0" Association="Self.FK__pomiary__id_rodz__2C3393D0">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__2F10007B" Association="Self.FK__pomiary__id_rodz__2F10007B">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__2A4B4B5E" Association="Self.FK__pomiary__idUzytk__2A4B4B5E">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__2D27B809" Association="Self.FK__pomiary__idUzytk__2D27B809">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__300424B4" Association="Self.FK__pomiary__idUzytk__300424B4">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__miejsce__38996AB5" Association="Self.FK__pomiary__miejsce__38996AB5">
+            <End Role="miejsca_pomiaru" EntitySet="miejsca_pomiaru" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary_g__idGru__1367E606" Association="Self.FK__pomiary_g__idGru__1367E606">
+            <End Role="grupy" EntitySet="grupy" />
+            <End Role="pomiary_grup" EntitySet="pomiary_grup" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary_g__idPom__1920BF5C" Association="Self.FK__pomiary_g__idPom__1920BF5C">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary_grup" EntitySet="pomiary_grup" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="wizualizacja2Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="pomiary">
+          <Key>
+            <PropertyRef Name="idPomiaru" />
+          </Key>
+          <Property Name="idPomiaru" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gateId" Type="Int32" Nullable="false" />
+          <Property Name="value" Type="Double" Nullable="false" />
+          <Property Name="time" Type="Int64" Nullable="false" />
+          <Property Name="idUzytkownika" Type="Int32" Nullable="false" />
+          <Property Name="data_wprowadzenia" Type="Int64" Nullable="false" />
+          <Property Name="id_rodzaju_pomiaru" Type="Int32" Nullable="false" />
+          <Property Name="miejsce" Type="Int32" />
+          <Property Name="uwaga" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="czy_sprzedaz" Type="Boolean" Nullable="false" />
+          <Property Name="planowana_data" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_zlecenia_wywozowego" Type="Int32" />
+          <Property Name="id_zlecenia_przywozowego" Type="Int32" />
+          <NavigationProperty Name="miejsca_pomiaru" Relationship="wizualizacja2Model.FK__pomiary__miejsce__38996AB5" FromRole="pomiary" ToRole="miejsca_pomiaru" />
+          <NavigationProperty Name="rodzaje_pomiarow" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__29572725" FromRole="pomiary" ToRole="rodzaje_pomiarow" />
+          <NavigationProperty Name="rodzaje_pomiarow1" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__2C3393D0" FromRole="pomiary" ToRole="rodzaje_pomiarow" />
+          <NavigationProperty Name="rodzaje_pomiarow2" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__2F10007B" FromRole="pomiary" ToRole="rodzaje_pomiarow" />
+          <NavigationProperty Name="uzytkownicy" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__2A4B4B5E" FromRole="pomiary" ToRole="uzytkownicy" />
+          <NavigationProperty Name="uzytkownicy1" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__2D27B809" FromRole="pomiary" ToRole="uzytkownicy" />
+          <NavigationProperty Name="uzytkownicy2" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__300424B4" FromRole="pomiary" ToRole="uzytkownicy" />
+        </EntityType>
+        <EntityType Name="Slownik">
+          <Key>
+            <PropertyRef Name="slowId" />
+          </Key>
+          <Property Name="slowId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RecNo" Type="Int16" Nullable="false" />
+          <Property Name="LongGate" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idStacji" Type="Byte" Nullable="false" />
+          <Property Name="rodzajBramki" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="rodzajPomiaru" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="gateId" Type="Int32" Nullable="false" />
+          <Property Name="minimum" Type="Int16" />
+          <Property Name="maksimum" Type="Int16" />
+          <Property Name="zdarz" Type="Boolean" />
+          <Property Name="rodz_dla_zdarz" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="wizualizacja2Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="pomiary" EntityType="Self.pomiary" />
+          <EntitySet Name="Slownik" EntityType="Self.Slownik" />
+          <EntitySet Name="atrybuty_zdarzen" EntityType="wizualizacja2Model.atrybuty_zdarzen" />
+          <EntitySet Name="grupy" EntityType="wizualizacja2Model.grupy" />
+          <EntitySet Name="grupy_raportowe" EntityType="wizualizacja2Model.grupy_raportowe" />
+          <EntitySet Name="komunikaty" EntityType="wizualizacja2Model.komunikaty" />
+          <EntitySet Name="miejsca_pomiaru" EntityType="wizualizacja2Model.miejsca_pomiaru" />
+          <EntitySet Name="multicont" EntityType="wizualizacja2Model.multicont" />
+          <EntitySet Name="pracownik_sterowni" EntityType="wizualizacja2Model.pracownik_sterowni" />
+          <EntitySet Name="rodzaje_bramek_zdarzen" EntityType="wizualizacja2Model.rodzaje_bramek_zdarzen" />
+          <EntitySet Name="rodzaje_pomiarow" EntityType="wizualizacja2Model.rodzaje_pomiarow" />
+          <EntitySet Name="slownik_bramek_zewnetrznych" EntityType="wizualizacja2Model.slownik_bramek_zewnetrznych" />
+          <EntitySet Name="uprawnienia" EntityType="wizualizacja2Model.uprawnienia" />
+          <EntitySet Name="uprawnienia_sterowni" EntityType="wizualizacja2Model.uprawnienia_sterowni" />
+          <EntitySet Name="uzytkownicy" EntityType="wizualizacja2Model.uzytkownicy" />
+          <EntitySet Name="wielkosci_mierzone" EntityType="wizualizacja2Model.wielkosci_mierzone" />
+          <EntitySet Name="zdarzenia_sterownia" EntityType="wizualizacja2Model.zdarzenia_sterownia" />
+          <EntitySet Name="zewnetrzne_zrodla_zdarzen" EntityType="wizualizacja2Model.zewnetrzne_zrodla_zdarzen" />
+          <EntitySet Name="zmiany" EntityType="wizualizacja2Model.zmiany" />
+          <EntitySet Name="elementy_grup" EntityType="wizualizacja2Model.elementy_grup" />
+          <EntitySet Name="elementy_grup_raportowych" EntityType="wizualizacja2Model.elementy_grup_raportowych" />
+          <EntitySet Name="objetosci_zbiornikow" EntityType="wizualizacja2Model.objetosci_zbiornikow" />
+          <EntitySet Name="potwierdzone_komunikaty" EntityType="wizualizacja2Model.potwierdzone_komunikaty" />
+          <AssociationSet Name="FK__elementy___idGru__117F9D94" Association="wizualizacja2Model.FK__elementy___idGru__117F9D94">
+            <End Role="grupy" EntitySet="grupy" />
+            <End Role="elementy_grup" EntitySet="elementy_grup" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__miejsce__38996AB5" Association="wizualizacja2Model.FK__pomiary__miejsce__38996AB5">
+            <End Role="miejsca_pomiaru" EntitySet="miejsca_pomiaru" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__29572725" Association="wizualizacja2Model.FK__pomiary__id_rodz__29572725">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__2C3393D0" Association="wizualizacja2Model.FK__pomiary__id_rodz__2C3393D0">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__id_rodz__2F10007B" Association="wizualizacja2Model.FK__pomiary__id_rodz__2F10007B">
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__2A4B4B5E" Association="wizualizacja2Model.FK__pomiary__idUzytk__2A4B4B5E">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__2D27B809" Association="wizualizacja2Model.FK__pomiary__idUzytk__2D27B809">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="FK__pomiary__idUzytk__300424B4" Association="wizualizacja2Model.FK__pomiary__idUzytk__300424B4">
+            <End Role="uzytkownicy" EntitySet="uzytkownicy" />
+            <End Role="pomiary" EntitySet="pomiary" />
+          </AssociationSet>
+          <AssociationSet Name="pomiary_grup" Association="wizualizacja2Model.pomiary_grup">
+            <End Role="grupy" EntitySet="grupy" />
+            <End Role="rodzaje_pomiarow" EntitySet="rodzaje_pomiarow" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="atrybuty_zdarzen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="opis" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="grupy">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+          </Key>
+          <Property Name="idGrupy" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="elementy_grup" Relationship="wizualizacja2Model.FK__elementy___idGru__117F9D94" FromRole="grupy" ToRole="elementy_grup" />
+          <NavigationProperty Name="rodzaje_pomiarow" Relationship="wizualizacja2Model.pomiary_grup" FromRole="grupy" ToRole="rodzaje_pomiarow" />
+        </EntityType>
+        <EntityType Name="grupy_raportowe">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+          </Key>
+          <Property Name="idGrupy" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwaGrupy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="numerGrupy" Type="Int32" Nullable="false" />
+          <Property Name="czy_analogowo_cyfrowa" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="komunikaty">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="data_utworzenia" Type="Int64" Nullable="false" />
+          <Property Name="tresc" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="zmiana" Type="Int32" Nullable="false" />
+          <Property Name="data_waznosci" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="miejsca_pomiaru">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="miejsce" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="pomiary" Relationship="wizualizacja2Model.FK__pomiary__miejsce__38996AB5" FromRole="miejsca_pomiaru" ToRole="pomiary" />
+        </EntityType>
+        <EntityType Name="multicont">
+          <Key>
+            <PropertyRef Name="idOdczytu" />
+          </Key>
+          <Property Name="idOdczytu" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="wartosc" Type="Double" Nullable="false" />
+          <Property Name="jednostka" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="gateId" Type="Int32" Nullable="false" />
+          <Property Name="czas" Type="String" Nullable="false" MaxLength="19" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="pracownik_sterowni">
+          <Key>
+            <PropertyRef Name="id_pracownika" />
+          </Key>
+          <Property Name="id_pracownika" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="imie" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="nazwisko" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="haslo" Type="String" Nullable="false" MaxLength="32" FixedLength="true" Unicode="false" />
+          <Property Name="czy_admin" Type="Boolean" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="aktywny" Type="Boolean" Nullable="false" />
+          <Property Name="numer_telefonu" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="rodzaje_bramek_zdarzen">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="rodzaje_pomiarow">
+          <Key>
+            <PropertyRef Name="idPomiaru" />
+          </Key>
+          <Property Name="idPomiaru" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="pomiary" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__29572725" FromRole="rodzaje_pomiarow" ToRole="pomiary" />
+          <NavigationProperty Name="pomiary1" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__2C3393D0" FromRole="rodzaje_pomiarow" ToRole="pomiary" />
+          <NavigationProperty Name="pomiary2" Relationship="wizualizacja2Model.FK__pomiary__id_rodz__2F10007B" FromRole="rodzaje_pomiarow" ToRole="pomiary" />
+          <NavigationProperty Name="grupy" Relationship="wizualizacja2Model.pomiary_grup" FromRole="rodzaje_pomiarow" ToRole="grupy" />
+        </EntityType>
+        <EntityType Name="slownik_bramek_zewnetrznych">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="opis" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="aktywna" Type="Boolean" Nullable="false" />
+          <Property Name="stworzono_zdarzenie" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uprawnienia">
+          <Key>
+            <PropertyRef Name="idUprawnienia" />
+          </Key>
+          <Property Name="idUprawnienia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="poziom" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="uprawnienia_sterowni">
+          <Key>
+            <PropertyRef Name="idUprawnienia" />
+          </Key>
+          <Property Name="idUprawnienia" Type="Int32" Nullable="false" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="uzytkownicy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="login" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="haslo" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="poziom" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="pomiary" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__2A4B4B5E" FromRole="uzytkownicy" ToRole="pomiary" />
+          <NavigationProperty Name="pomiary1" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__2D27B809" FromRole="uzytkownicy" ToRole="pomiary" />
+          <NavigationProperty Name="pomiary2" Relationship="wizualizacja2Model.FK__pomiary__idUzytk__300424B4" FromRole="uzytkownicy" ToRole="pomiary" />
+        </EntityType>
+        <EntityType Name="wielkosci_mierzone">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="zdarzenia_sterownia">
+          <Key>
+            <PropertyRef Name="id_zdarzenia" />
+          </Key>
+          <Property Name="id_zdarzenia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_pracownika_sterowni" Type="Int32" Nullable="false" />
+          <Property Name="id_bramki" Type="Int32" Nullable="false" />
+          <Property Name="data_zdarzenia" Type="Int64" Nullable="false" />
+          <Property Name="opis_zdarzenia" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="atrybut" Type="Int32" Nullable="false" />
+          <Property Name="termin" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="id_etapu" Type="Int32" Nullable="false" />
+          <Property Name="opis_bramki" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="czy_dotyczy_bramki" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="zewnetrzne_zrodla_zdarzen">
+          <Key>
+            <PropertyRef Name="nazwa" />
+          </Key>
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="atrybut" Type="Int32" Nullable="false" />
+          <Property Name="termin" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="zmiany">
+          <Key>
+            <PropertyRef Name="id_zmiany" />
+          </Key>
+          <Property Name="id_zmiany" Type="Int32" Nullable="false" />
+          <Property Name="godzina_poczatku" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="elementy_grup">
+          <Key>
+            <PropertyRef Name="idGrupy" />
+            <PropertyRef Name="gateId" />
+          </Key>
+          <Property Name="idGrupy" Type="Int32" Nullable="false" />
+          <Property Name="gateId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="grupy" Relationship="wizualizacja2Model.FK__elementy___idGru__117F9D94" FromRole="elementy_grup" ToRole="grupy" />
+        </EntityType>
+        <EntityType Name="elementy_grup_raportowych">
+          <Key>
+            <PropertyRef Name="numerGrupyRaportowej" />
+            <PropertyRef Name="gateId" />
+            <PropertyRef Name="rodzajPomiaru" />
+          </Key>
+          <Property Name="numerGrupyRaportowej" Type="Int32" Nullable="false" />
+          <Property Name="gateId" Type="Int32" Nullable="false" />
+          <Property Name="rodzajPomiaru" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="objetosci_zbiornikow">
+          <Key>
+            <PropertyRef Name="nazwa" />
+            <PropertyRef Name="wysokosc" />
+            <PropertyRef Name="objetosc" />
+          </Key>
+          <Property Name="nazwa" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="wysokosc" Type="Int32" Nullable="false" />
+          <Property Name="objetosc" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="potwierdzone_komunikaty">
+          <Key>
+            <PropertyRef Name="id_pracownik" />
+            <PropertyRef Name="id_komunikatu" />
+          </Key>
+          <Property Name="id_pracownik" Type="Int32" Nullable="false" />
+          <Property Name="id_komunikatu" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__elementy___idGru__117F9D94">
+          <End Type="wizualizacja2Model.grupy" Role="grupy" Multiplicity="1" />
+          <End Type="wizualizacja2Model.elementy_grup" Role="elementy_grup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="grupy">
+              <PropertyRef Name="idGrupy" />
+            </Principal>
+            <Dependent Role="elementy_grup">
+              <PropertyRef Name="idGrupy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__miejsce__38996AB5">
+          <End Type="wizualizacja2Model.miejsca_pomiaru" Role="miejsca_pomiaru" Multiplicity="0..1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="miejsca_pomiaru">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="miejsce" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__id_rodz__29572725">
+          <End Type="wizualizacja2Model.rodzaje_pomiarow" Role="rodzaje_pomiarow" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__id_rodz__2C3393D0">
+          <End Type="wizualizacja2Model.rodzaje_pomiarow" Role="rodzaje_pomiarow" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__id_rodz__2F10007B">
+          <End Type="wizualizacja2Model.rodzaje_pomiarow" Role="rodzaje_pomiarow" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="rodzaje_pomiarow">
+              <PropertyRef Name="idPomiaru" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="id_rodzaju_pomiaru" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__2A4B4B5E">
+          <End Type="wizualizacja2Model.uzytkownicy" Role="uzytkownicy" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__2D27B809">
+          <End Type="wizualizacja2Model.uzytkownicy" Role="uzytkownicy" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__pomiary__idUzytk__300424B4">
+          <End Type="wizualizacja2Model.uzytkownicy" Role="uzytkownicy" Multiplicity="1" />
+          <End Type="wizualizacja2Model.pomiary" Role="pomiary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="uzytkownicy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="pomiary">
+              <PropertyRef Name="idUzytkownika" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="pomiary_grup">
+          <End Type="wizualizacja2Model.grupy" Role="grupy" Multiplicity="*" />
+          <End Type="wizualizacja2Model.rodzaje_pomiarow" Role="rodzaje_pomiarow" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="wizualizacja2ModelStoreContainer" CdmEntityContainer="wizualizacja2Entities">
+          <EntitySetMapping Name="pomiary">
+            <EntityTypeMapping TypeName="wizualizacja2Model.pomiary">
+              <MappingFragment StoreEntitySet="pomiary">
+                <ScalarProperty Name="idPomiaru" ColumnName="idPomiaru" />
+                <ScalarProperty Name="gateId" ColumnName="gateId" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="time" ColumnName="time" />
+                <ScalarProperty Name="idUzytkownika" ColumnName="idUzytkownika" />
+                <ScalarProperty Name="data_wprowadzenia" ColumnName="data_wprowadzenia" />
+                <ScalarProperty Name="id_rodzaju_pomiaru" ColumnName="id_rodzaju_pomiaru" />
+                <ScalarProperty Name="miejsce" ColumnName="miejsce" />
+                <ScalarProperty Name="uwaga" ColumnName="uwaga" />
+                <ScalarProperty Name="czy_sprzedaz" ColumnName="czy_sprzedaz" />
+                <ScalarProperty Name="planowana_data" ColumnName="planowana_data" />
+                <ScalarProperty Name="id_zlecenia_wywozowego" ColumnName="id_zlecenia_wywozowego" />
+                <ScalarProperty Name="id_zlecenia_przywozowego" ColumnName="id_zlecenia_przywozowego" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Slownik">
+            <EntityTypeMapping TypeName="wizualizacja2Model.Slownik">
+              <MappingFragment StoreEntitySet="Slownik">
+                <ScalarProperty Name="slowId" ColumnName="slowId" />
+                <ScalarProperty Name="RecNo" ColumnName="RecNo" />
+                <ScalarProperty Name="LongGate" ColumnName="LongGate" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="idStacji" ColumnName="idStacji" />
+                <ScalarProperty Name="rodzajBramki" ColumnName="rodzajBramki" />
+                <ScalarProperty Name="rodzajPomiaru" ColumnName="rodzajPomiaru" />
+                <ScalarProperty Name="gateId" ColumnName="gateId" />
+                <ScalarProperty Name="minimum" ColumnName="minimum" />
+                <ScalarProperty Name="maksimum" ColumnName="maksimum" />
+                <ScalarProperty Name="zdarz" ColumnName="zdarz" />
+                <ScalarProperty Name="rodz_dla_zdarz" ColumnName="rodz_dla_zdarz" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="atrybuty_zdarzen">
+            <EntityTypeMapping TypeName="wizualizacja2Model.atrybuty_zdarzen">
+              <MappingFragment StoreEntitySet="atrybuty_zdarzen">
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grupy">
+            <EntityTypeMapping TypeName="wizualizacja2Model.grupy">
+              <MappingFragment StoreEntitySet="grupy">
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="idGrupy" ColumnName="idGrupy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="grupy_raportowe">
+            <EntityTypeMapping TypeName="wizualizacja2Model.grupy_raportowe">
+              <MappingFragment StoreEntitySet="grupy_raportowe">
+                <ScalarProperty Name="czy_analogowo_cyfrowa" ColumnName="czy_analogowo_cyfrowa" />
+                <ScalarProperty Name="numerGrupy" ColumnName="numerGrupy" />
+                <ScalarProperty Name="nazwaGrupy" ColumnName="nazwaGrupy" />
+                <ScalarProperty Name="idGrupy" ColumnName="idGrupy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="komunikaty">
+            <EntityTypeMapping TypeName="wizualizacja2Model.komunikaty">
+              <MappingFragment StoreEntitySet="komunikaty">
+                <ScalarProperty Name="data_waznosci" ColumnName="data_waznosci" />
+                <ScalarProperty Name="zmiana" ColumnName="zmiana" />
+                <ScalarProperty Name="tresc" ColumnName="tresc" />
+                <ScalarProperty Name="data_utworzenia" ColumnName="data_utworzenia" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="miejsca_pomiaru">
+            <EntityTypeMapping TypeName="wizualizacja2Model.miejsca_pomiaru">
+              <MappingFragment StoreEntitySet="miejsca_pomiaru">
+                <ScalarProperty Name="miejsce" ColumnName="miejsce" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="multicont">
+            <EntityTypeMapping TypeName="wizualizacja2Model.multicont">
+              <MappingFragment StoreEntitySet="multicont">
+                <ScalarProperty Name="czas" ColumnName="czas" />
+                <ScalarProperty Name="gateId" ColumnName="gateId" />
+                <ScalarProperty Name="jednostka" ColumnName="jednostka" />
+                <ScalarProperty Name="wartosc" ColumnName="wartosc" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="idOdczytu" ColumnName="idOdczytu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pracownik_sterowni">
+            <EntityTypeMapping TypeName="wizualizacja2Model.pracownik_sterowni">
+              <MappingFragment StoreEntitySet="pracownik_sterowni">
+                <ScalarProperty Name="numer_telefonu" ColumnName="numer_telefonu" />
+                <ScalarProperty Name="aktywny" ColumnName="aktywny" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="czy_admin" ColumnName="czy_admin" />
+                <ScalarProperty Name="haslo" ColumnName="haslo" />
+                <ScalarProperty Name="nazwisko" ColumnName="nazwisko" />
+                <ScalarProperty Name="imie" ColumnName="imie" />
+                <ScalarProperty Name="id_pracownika" ColumnName="id_pracownika" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rodzaje_bramek_zdarzen">
+            <EntityTypeMapping TypeName="wizualizacja2Model.rodzaje_bramek_zdarzen">
+              <MappingFragment StoreEntitySet="rodzaje_bramek_zdarzen">
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rodzaje_pomiarow">
+            <EntityTypeMapping TypeName="wizualizacja2Model.rodzaje_pomiarow">
+              <MappingFragment StoreEntitySet="rodzaje_pomiarow">
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="idPomiaru" ColumnName="idPomiaru" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="slownik_bramek_zewnetrznych">
+            <EntityTypeMapping TypeName="wizualizacja2Model.slownik_bramek_zewnetrznych">
+              <MappingFragment StoreEntitySet="slownik_bramek_zewnetrznych">
+                <ScalarProperty Name="stworzono_zdarzenie" ColumnName="stworzono_zdarzenie" />
+                <ScalarProperty Name="aktywna" ColumnName="aktywna" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uprawnienia">
+            <EntityTypeMapping TypeName="wizualizacja2Model.uprawnienia">
+              <MappingFragment StoreEntitySet="uprawnienia">
+                <ScalarProperty Name="poziom" ColumnName="poziom" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="idUprawnienia" ColumnName="idUprawnienia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uprawnienia_sterowni">
+            <EntityTypeMapping TypeName="wizualizacja2Model.uprawnienia_sterowni">
+              <MappingFragment StoreEntitySet="uprawnienia_sterowni">
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="idUprawnienia" ColumnName="idUprawnienia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uzytkownicy">
+            <EntityTypeMapping TypeName="wizualizacja2Model.uzytkownicy">
+              <MappingFragment StoreEntitySet="uzytkownicy">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="poziom" ColumnName="poziom" />
+                <ScalarProperty Name="haslo" ColumnName="haslo" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="login" ColumnName="login" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="wielkosci_mierzone">
+            <EntityTypeMapping TypeName="wizualizacja2Model.wielkosci_mierzone">
+              <MappingFragment StoreEntitySet="wielkosci_mierzone">
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zdarzenia_sterownia">
+            <EntityTypeMapping TypeName="wizualizacja2Model.zdarzenia_sterownia">
+              <MappingFragment StoreEntitySet="zdarzenia_sterownia">
+                <ScalarProperty Name="czy_dotyczy_bramki" ColumnName="czy_dotyczy_bramki" />
+                <ScalarProperty Name="opis_bramki" ColumnName="opis_bramki" />
+                <ScalarProperty Name="id_etapu" ColumnName="id_etapu" />
+                <ScalarProperty Name="termin" ColumnName="termin" />
+                <ScalarProperty Name="atrybut" ColumnName="atrybut" />
+                <ScalarProperty Name="opis_zdarzenia" ColumnName="opis_zdarzenia" />
+                <ScalarProperty Name="data_zdarzenia" ColumnName="data_zdarzenia" />
+                <ScalarProperty Name="id_bramki" ColumnName="id_bramki" />
+                <ScalarProperty Name="id_pracownika_sterowni" ColumnName="id_pracownika_sterowni" />
+                <ScalarProperty Name="id_zdarzenia" ColumnName="id_zdarzenia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zewnetrzne_zrodla_zdarzen">
+            <EntityTypeMapping TypeName="wizualizacja2Model.zewnetrzne_zrodla_zdarzen">
+              <MappingFragment StoreEntitySet="zewnetrzne_zrodla_zdarzen">
+                <ScalarProperty Name="termin" ColumnName="termin" />
+                <ScalarProperty Name="atrybut" ColumnName="atrybut" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="zmiany">
+            <EntityTypeMapping TypeName="wizualizacja2Model.zmiany">
+              <MappingFragment StoreEntitySet="zmiany">
+                <ScalarProperty Name="godzina_poczatku" ColumnName="godzina_poczatku" />
+                <ScalarProperty Name="id_zmiany" ColumnName="id_zmiany" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="elementy_grup">
+            <EntityTypeMapping TypeName="wizualizacja2Model.elementy_grup">
+              <MappingFragment StoreEntitySet="elementy_grup">
+                <ScalarProperty Name="gateId" ColumnName="gateId" />
+                <ScalarProperty Name="idGrupy" ColumnName="idGrupy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="elementy_grup_raportowych">
+            <EntityTypeMapping TypeName="wizualizacja2Model.elementy_grup_raportowych">
+              <MappingFragment StoreEntitySet="elementy_grup_raportowych">
+                <ScalarProperty Name="rodzajPomiaru" ColumnName="rodzajPomiaru" />
+                <ScalarProperty Name="gateId" ColumnName="gateId" />
+                <ScalarProperty Name="numerGrupyRaportowej" ColumnName="numerGrupyRaportowej" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="objetosci_zbiornikow">
+            <EntityTypeMapping TypeName="wizualizacja2Model.objetosci_zbiornikow">
+              <MappingFragment StoreEntitySet="objetosci_zbiornikow">
+                <ScalarProperty Name="objetosc" ColumnName="objetosc" />
+                <ScalarProperty Name="wysokosc" ColumnName="wysokosc" />
+                <ScalarProperty Name="nazwa" ColumnName="nazwa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="potwierdzone_komunikaty">
+            <EntityTypeMapping TypeName="wizualizacja2Model.potwierdzone_komunikaty">
+              <MappingFragment StoreEntitySet="potwierdzone_komunikaty">
+                <ScalarProperty Name="id_komunikatu" ColumnName="id_komunikatu" />
+                <ScalarProperty Name="id_pracownik" ColumnName="id_pracownik" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="pomiary_grup" TypeName="wizualizacja2Model.pomiary_grup" StoreEntitySet="pomiary_grup">
+            <EndProperty Name="rodzaje_pomiarow">
+              <ScalarProperty Name="idPomiaru" ColumnName="idPomiaru" />
+            </EndProperty>
+            <EndProperty Name="grupy">
+              <ScalarProperty Name="idGrupy" ColumnName="idGrupy" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
