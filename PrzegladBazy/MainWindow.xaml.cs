@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.Wpf;
 using PrzegladBazy.Annotations;
@@ -46,6 +47,20 @@ namespace PrzegladBazy
             }
         }
 
+       
+        private PlotModel _model1 = new PlotModel();
+        public PlotModel Model1
+        {
+            get => _model1;
+            set
+            {
+                if (_model1 != value)
+                {
+                    _model1 = value; NotifyPropertyChanged();
+                }
+            }
+        }
+
         private IList<DataPoint> _points = new List<DataPoint>
         {
             new DataPoint(0, 4),
@@ -67,30 +82,57 @@ namespace PrzegladBazy
                 }
             }
         }
+
         public MainWindow()
         {
+            
             InitializeComponent();
             this.DataContext = this;
             slowniki.DropDownClosed += Slowniki_DropDownClosed;
+            slowniki.IsEnabled = false;
+
+
+
             //var siema = new MainViewModel();
             //chart.Model = siema.MyModel;
         }
 
         private void Slowniki_DropDownClosed(object sender, EventArgs e)
-        {
-            
+        { 
+            if (slowniki.SelectedValue == null)
+                return;
+
             Slownik = _context.Slownik.Local.First(d => d.LongGate == (string)slowniki.SelectedValue);
             var dupa = _context.pomiary.Local.Where(d => d.gateId == Slownik.gateId).ToList();
             
             Debug.WriteLine(dupa.Count);
             var points = new List<DataPoint>();
             int i = 0;
+
+            var s1 = new OxyPlot.Series.LineSeries();
+            
+
             foreach (var foo in dupa)
             {
-                points.Add(new DataPoint(i++, foo.value));
-            }
+                //points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(TimeSpan.FromMilliseconds(foo.time)), Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ?  foo.value < 1 ? 0 : 1 : foo.value));
+                points.Add(new DataPoint(
+                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1,1).AddMilliseconds(foo.time)), 
+                    Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ?  foo.value < 1 ? 0 : 1 : foo.value
+                    ));
 
-            Points = points;
+                
+            }
+            var model = new PlotModel {Title = Slownik.LongGate};
+            //new OxyPlot.Axes.{Position = AxisPosition.Bottom};
+            model.Axes.Add(new OxyPlot.Axes.DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "dd/MM/yyyy"});
+            model.Axes.Add(new OxyPlot.Axes.LinearAxis {Position = AxisPosition.Right});
+
+            model.Series.Add(new OxyPlot.Series.LineSeries {ItemsSource = points});
+
+            Model1 = model;
+            //model.Axes.Add(new Axes.LinearAxis());
+
+            //Points = points;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -105,10 +147,15 @@ namespace PrzegladBazy
 
             await _context.Slownik.LoadAsync();
             this.Slownik = _context.Slownik.Local.First();
-            _context.pomiary.Load();
-            var foo = (from d in _context.Slownik.Local select d.LongGate).ToList();
+            await _context.pomiary.LoadAsync();
+
+            var foo = (from d in _context.Slownik.Local
+                       where _context.pomiary.Any(a => a.gateId == d.gateId)
+                       select d.LongGate).ToList();
             foo.Sort();
             slowniki.ItemsSource = foo;
+
+            slowniki.IsEnabled = true;
             //System.Windows.Data.CollectionViewSource slownikViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("slownikViewSource")));
             //// Załaduj dane poprzez ustawienie właściwości CollectionViewSource.Source:
             //// slownikViewSource.Źródło = [ogólne źródło danych]

@@ -67,11 +67,7 @@
         </Grid>
         </StackPanel>
             <Grid>
-            <oxy:Plot x:Name="chart" Title="Test" MinWidth="29" MinHeight="38">
-                <oxy:Plot.Series>
-                    <oxy:LineSeries ItemsSource="{Binding Points}" />
-                </oxy:Plot.Series>
-            </oxy:Plot>
+            <oxy:PlotView Model="{Binding Model1}" />
         </Grid>
     </DockPanel>
     <!--<StackPanel DataContext="{StaticResource pomiaryViewSource}" Margin="0">
