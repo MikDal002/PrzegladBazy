@@ -1,10 +1,82 @@
-﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:PrzegladBazy" xmlns:Models="clr-namespace:PrzegladBazy.Models" x:Class="PrzegladBazy.MainWindow" mc:Ignorable="d" Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+﻿<Window xmlns:oxy="http://oxyplot.org/wpf" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:PrzegladBazy" xmlns:Models="clr-namespace:PrzegladBazy.Models" x:Class="PrzegladBazy.MainWindow" mc:Ignorable="d" Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
     <Window.Resources>
         <CollectionViewSource x:Key="pomiaryViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:pomiary}, CreateList=True}" />
         <CollectionViewSource x:Key="slownikViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Slownik}, CreateList=True}" />
     </Window.Resources>
-    <Grid DataContext="{StaticResource pomiaryViewSource}" Margin="0">
-        <DataGrid x:Name="slownikDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource slownikViewSource}}" Margin="0" RowDetailsVisibilityMode="VisibleWhenSelected">
+    <DockPanel LastChildFill="True" Margin="0">
+        <StackPanel>
+            <ComboBox x:Name="slowniki"></ComboBox>
+        
+        <Grid MaxWidth="200" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="slowiD" Grid.Column="0" Grid.Row="0" />
+            <TextBlock Text="{Binding Slownik.slowId}" Grid.Column="1" Grid.Row="0" />
+
+            <TextBlock Text="RecNo" Grid.Column="0" Grid.Row="1" />
+            <TextBlock Text="{Binding Slownik.RecNo}" Grid.Column="1" Grid.Row="1" />
+
+            <TextBlock Text="LongGate" Grid.Column="0" Grid.Row="2" />
+            <TextBlock Text="{Binding Slownik.LongGate}" Grid.Column="1" Grid.Row="2" />
+
+            <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
+                <TextBlock Text="description" />
+                <TextBox TextWrapping="Wrap" Text="{Binding Slownik.description}" IsReadOnly="True" MinLines="2" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" />
+
+            </StackPanel>
+            
+            <TextBlock Text="idStacji" Grid.Column="0" Grid.Row="4" />
+            <TextBlock Text="{Binding Slownik.idStacji}" Grid.Column="1" Grid.Row="4" />
+
+            <TextBlock Text="rodzajBramki" Grid.Column="0" Grid.Row="5" />
+            <TextBlock Text="{Binding Slownik.rodzajBramki}" Grid.Column="1" Grid.Row="5" />
+
+            <TextBlock Text="rodzajPomiaru" Grid.Column="0" Grid.Row="6" />
+            <TextBlock Text="{Binding Slownik.rodzajPomiaru}" Grid.Column="1" Grid.Row="6" />
+
+            <TextBlock Text="gateId" Grid.Column="0" Grid.Row="7" />
+            <TextBlock Text="{Binding Slownik.gateId}" Grid.Column="1" Grid.Row="7" />
+
+            <TextBlock Text="minimum" Grid.Column="0" Grid.Row="8" />
+            <TextBlock Text="{Binding Slownik.minimum}" Grid.Column="1" Grid.Row="8" />
+
+            <TextBlock Text="maksimum" Grid.Column="0" Grid.Row="9" />
+            <TextBlock Text="{Binding Slownik.maksimum}" Grid.Column="1" Grid.Row="9" />
+
+            <TextBlock Text="zdarz" Grid.Column="0" Grid.Row="10" />
+            <TextBlock Text="{Binding Slownik.zdarz}" Grid.Column="1" Grid.Row="10" />
+
+            <TextBlock Text="rodz_dla_zdarz" Grid.Column="0" Grid.Row="11" />
+            <TextBlock Text="{Binding Slownik.rodz_dla_zdarz}" Grid.Column="1" Grid.Row="11" />
+        </Grid>
+        </StackPanel>
+            <Grid>
+            <oxy:Plot x:Name="chart" Title="Test" MinWidth="29" MinHeight="38">
+                <oxy:Plot.Series>
+                    <oxy:LineSeries ItemsSource="{Binding Points}" />
+                </oxy:Plot.Series>
+            </oxy:Plot>
+        </Grid>
+    </DockPanel>
+    <!--<StackPanel DataContext="{StaticResource pomiaryViewSource}" Margin="0">
+        
+        <DataGrid x:Name="slownikDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource slownikViewSource}}" Margin="0" RowDetailsVisibilityMode="VisibleWhenSelected" Height="319">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="descriptionColumn" Binding="{Binding description}" Header="description" Width="SizeToHeader" />
                 <DataGridTextColumn x:Name="gateIdColumn" Binding="{Binding gateId}" Header="gate Id" Width="SizeToHeader" />
@@ -20,5 +92,5 @@
                 <DataGridCheckBoxColumn x:Name="zdarzColumn" Binding="{Binding zdarz}" Header="zdarz" Width="SizeToHeader" />
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </StackPanel>-->
 </Window>
