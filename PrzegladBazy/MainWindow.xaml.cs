@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,9 +32,14 @@ namespace PrzegladBazy
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private List<List<string>> groups = new List<List<string>>();
+        /// <summary>
+        /// Dostęp do danych z bazy
+        /// </summary>
         private wizualizacja2Entities _context = new wizualizacja2Entities();
-
-        private Slownik _slownik = new Slownik();
+        /// <summary>
+        /// Reprezentuje aktualnie wybrane słowo z słownika
+        /// </summary>
         public Slownik Slownik
         {
             get => _slownik;
@@ -46,9 +52,10 @@ namespace PrzegladBazy
                 }
             }
         }
-
-       
-        private PlotModel _model1 = new PlotModel();
+        private Slownik _slownik = new Slownik();
+        /// <summary>
+        /// Reperezentuje wykres na głównej stornie
+        /// </summary>
         public PlotModel Model1
         {
             get => _model1;
@@ -60,134 +67,109 @@ namespace PrzegladBazy
                 }
             }
         }
-
-        private IList<DataPoint> _points = new List<DataPoint>
-        {
-            new DataPoint(0, 4),
-            new DataPoint(10, 13),
-            new DataPoint(20, 15),
-            new DataPoint(30, 16),
-            new DataPoint(40, 12),
-            new DataPoint(50, 12)
-        };
-        public IList<DataPoint> Points
-        {
-            get => _points;
-            set
-            {
-                if (value != _points)
-                {
-                    _points = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
+        private PlotModel _model1 = new PlotModel();
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
         public MainWindow()
         {
-            
             InitializeComponent();
             this.DataContext = this;
             slowniki.DropDownClosed += Slowniki_DropDownClosed;
             slowniki.IsEnabled = false;
-
-
-
-            //var siema = new MainViewModel();
-            //chart.Model = siema.MyModel;
         }
-
-        private void Slowniki_DropDownClosed(object sender, EventArgs e)
-        { 
-            if (slowniki.SelectedValue == null)
-                return;
-
-            Slownik = _context.Slownik.Local.First(d => d.LongGate == (string)slowniki.SelectedValue);
-            var dupa = _context.pomiary.Local.Where(d => d.gateId == Slownik.gateId).ToList();
-            
-            Debug.WriteLine(dupa.Count);
-            var points = new List<DataPoint>();
-            int i = 0;
-
-            var s1 = new OxyPlot.Series.LineSeries();
-            
-
-            foreach (var foo in dupa)
-            {
-                //points.Add(new DataPoint(OxyPlot.Axes.DateTimeAxis.ToDouble(TimeSpan.FromMilliseconds(foo.time)), Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ?  foo.value < 1 ? 0 : 1 : foo.value));
-                points.Add(new DataPoint(
-                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1,1).AddMilliseconds(foo.time)), 
-                    Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ?  foo.value < 1 ? 0 : 1 : foo.value
-                    ));
-
-                
-            }
-            var model = new PlotModel {Title = Slownik.LongGate};
-            //new OxyPlot.Axes.{Position = AxisPosition.Bottom};
-            model.Axes.Add(new OxyPlot.Axes.DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "dd/MM/yyyy"});
-            model.Axes.Add(new OxyPlot.Axes.LinearAxis {Position = AxisPosition.Right});
-
-            model.Series.Add(new OxyPlot.Series.LineSeries {ItemsSource = points});
-
-            Model1 = model;
-            //model.Axes.Add(new Axes.LinearAxis());
-
-            //Points = points;
-        }
-
+        /// <summary>
+        /// Zdarzenie wywoływane każdorazowo przy zmianie którejś z właściwości klasy.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// Funkcja wywołująca zdarzenie PropertyChanged.
+        /// </summary>
+        /// <param name="name"></param>
         private void NotifyPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        /// <summary>
+        /// Rekacja na zamknięcie okna listy wybieralnej. Wywoływany jest np zaraz po wybraniu,
+        /// którejś z pozycji.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Slowniki_DropDownClosed(object sender, EventArgs e)
+        {
+            // Jeśli nic nie wybrano
+            if (slowniki.SelectedValue == null)
+                return;
 
+            // Odnajdź wybraną pozycję w bazie.
+            Slownik = _context.Slownik.Local.First(d => d.LongGate == (string)slowniki.SelectedValue);
+            
+            // Lista tymczasowa do punktów wykresu.
+            var points = new List<DataPoint>();
+
+            // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
+            foreach (var foo in _context.pomiary.Local.Where(d => d.gateId == Slownik.gateId))
+            {
+                points.Add(new DataPoint(
+                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
+                    Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value
+                    ));
+            }
+
+            // Wygląd wykresu
+            var model = new PlotModel { Title = Slownik.LongGate };
+            model.Axes.Add(new OxyPlot.Axes.DateTimeAxis
+            {
+                Position = AxisPosition.Bottom,
+                StringFormat = "dd/MM/yyyy",
+            });
+            model.Axes.Add(new OxyPlot.Axes.LinearAxis { Position = AxisPosition.Right });
+
+            // Seria wykresu
+            model.Series.Add(new OxyPlot.Series.LineSeries { ItemsSource = points });
+
+            // Aktualizacja wykresu.
+            Model1 = model;
+        }
+        /// <summary>
+        /// Funkcja wywoływana zaraz po załadowaniu okna. 
+        /// Ładuje ona wszystkie dostępne dane z bazy.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         async private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
+            // Załaduj dane z bazy
             await _context.Slownik.LoadAsync();
-            this.Slownik = _context.Slownik.Local.First();
             await _context.pomiary.LoadAsync();
 
-            var foo = (from d in _context.Slownik.Local
-                       where _context.pomiary.Any(a => a.gateId == d.gateId)
-                       select d.LongGate).ToList();
+            // Znajdz pierwszy wpis w słowniku, aby coś załadować
+            this.Slownik = _context.Slownik.Local.First();
+
+           
+            var foo = (from d in _context.Slownik where _context.pomiary.Any(ed => ed.gateId == d.gateId) select d.LongGate).ToList();
             foo.Sort();
             slowniki.ItemsSource = foo;
 
             slowniki.IsEnabled = true;
-            //System.Windows.Data.CollectionViewSource slownikViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("slownikViewSource")));
-            //// Załaduj dane poprzez ustawienie właściwości CollectionViewSource.Source:
-            //// slownikViewSource.Źródło = [ogólne źródło danych]
+            
+        }
 
-            //_context.Slownik.Load();
-            //this.Slownik = _context.Slownik.Local.First();
-
-
-            //_context.pomiary.Where(abcd => abcd.gateId == 6554072).Load();
-
-            //var ziup = _context.pomiary.Local;
-            //var i = 0;
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var okno = new CreateGroup(this);
+            okno.Show();
         }
     }
-    public class MainViewModel
+
+    public class SlownikGroup
     {
-        public MainViewModel()
+        private List<Slownik> _slowniki = null;
+
+        public SlownikGroup(IList<Slownik> slowniki)
         {
-            this.Title = "Example 2";
-            this.Points = new List<DataPoint>
-            {
-                new DataPoint(0, 4),
-                new DataPoint(10, 13),
-                new DataPoint(20, 15),
-                new DataPoint(30, 16),
-                new DataPoint(40, 12),
-                new DataPoint(50, 12)
-            };
+            _slowniki = slowniki.ToList();
         }
-
-        public string Title { get; private set; }
-
-        public IList<DataPoint> Points { get; private set; }
     }
 }

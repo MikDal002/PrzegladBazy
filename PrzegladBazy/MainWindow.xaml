@@ -20,8 +20,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -64,10 +65,12 @@
 
             <TextBlock Text="rodz_dla_zdarz" Grid.Column="0" Grid.Row="11" />
             <TextBlock Text="{Binding Slownik.rodz_dla_zdarz}" Grid.Column="1" Grid.Row="11" />
-        </Grid>
+            <Button Content="Button" Width="75" Grid.Row="12" Click="ButtonBase_OnClick"/>
+            </Grid>
+            
         </StackPanel>
             <Grid>
-            <oxy:PlotView Model="{Binding Model1}" />
+            <oxy:PlotView Model="{Binding Model1}"/>
         </Grid>
     </DockPanel>
     <!--<StackPanel DataContext="{StaticResource pomiaryViewSource}" Margin="0">
