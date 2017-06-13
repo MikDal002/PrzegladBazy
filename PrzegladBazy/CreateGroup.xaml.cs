@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
+using System.Xml.Serialization;
 using PrzegladBazy.Models;
 
 namespace PrzegladBazy
@@ -24,7 +27,6 @@ namespace PrzegladBazy
         /// Dostęp do danych z bazy
         /// </summary>
         private wizualizacja2Entities _context = new wizualizacja2Entities();
-        private List<string> _grupa = new List<string>();
         private MainWindow mainWindow;
 
         public CreateGroup(MainWindow mainWindow)
@@ -64,7 +66,25 @@ namespace PrzegladBazy
 
         private void Button_Save_Click(object sender, RoutedEventArgs e)
         {
-            
+            List<string> _grupa = new List<string>();
+            foreach (var item in LvChecked.Items)
+            {
+                var chb = item as CheckBox;
+                if (chb == null)
+                    continue;
+                
+                _grupa.Add(chb.Content.ToString());
+            }
+            var slgrp = new SlownikGroup();
+            slgrp._title = tbGroupName.Text;
+            slgrp._slowniki = _grupa;
+            XmlSerializer xs = new XmlSerializer(typeof(SlownikGroup));
+            var sciezka = System.IO.Path.GetFullPath(@".\Groups\" + tbGroupName.Text + @".xml");
+            new FileInfo(sciezka).Directory.Create();
+            TextWriter tw = new StreamWriter(sciezka);
+            xs.Serialize(tw, slgrp);
+            mainWindow.Groups.Add(slgrp);
+            this.Close();
         }
     }
 }
