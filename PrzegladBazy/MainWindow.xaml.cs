@@ -41,7 +41,7 @@ namespace PrzegladBazy
         /// <summary>
         /// Dostęp do danych z bazy
         /// </summary>
-        private wizualizacja2Entities _context = new wizualizacja2Entities();
+        private wizualizacja2Entities1 _context = new wizualizacja2Entities1();
         /// <summary>
         /// Reprezentuje aktualnie wybrane słowo z słownika
         /// </summary>
@@ -73,7 +73,7 @@ namespace PrzegladBazy
             }
         }
         private PlotModel _model1 = new PlotModel();
-        
+        public string connectionString;
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -81,10 +81,58 @@ namespace PrzegladBazy
         {
             InitializeComponent();
             this.DataContext = this;
-            slowniki.DropDownClosed += Slowniki_DropDownClosed;
-            slowniki.IsEnabled = false;
+
             grupySlownikow.ItemsSource = Groups;
+            Task.Run(() => testDBConnections());
+
         }
+
+        private void testDBConnections()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                slowniki.IsEnabled = false;
+                grupySlownikow.IsEnabled = false;
+                slowniki.DropDownClosed -= Slowniki_DropDownClosed;
+                grupySlownikow.DropDownClosed -= GrupySlownikow_OnDropDownClosed;
+            });
+            
+
+            try
+            {
+                _context.Database.Connection.Open();
+                Dispatcher.Invoke(() =>
+                {
+                    slowniki.DropDownClosed += Slowniki_DropDownClosed;
+                    grupySlownikow.DropDownClosed += GrupySlownikow_OnDropDownClosed;
+                    var foo = (from d in _context.Slownik orderby d.LongGate select d.LongGate).ToList();
+
+                    slowniki.ItemsSource = foo;
+
+                    slowniki.IsEnabled = true;
+                    grupySlownikow.IsEnabled = true;
+                });
+                
+                
+                this.Slownik = _context.Slownik.First();
+
+
+                
+
+            }
+            catch (SqlException e)
+            {
+                Debug.WriteLine(e);
+            }
+            finally
+            {
+                _context.Database.Connection.Close();
+            }
+
+
+            
+        }
+
         /// <summary>
         /// Zdarzenie wywoływane każdorazowo przy zmianie którejś z właściwości klasy.
         /// </summary>
@@ -114,9 +162,17 @@ namespace PrzegladBazy
             
             // Lista tymczasowa do punktów wykresu.
             var points = new List<DataPoint>();
-
+            if (data.SelectedDate == null)
+                return;
+            var dataa = (DateTime)data.SelectedDate;
+            var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+            var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
             // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-            foreach (var foo in _context.pomiary.Where(d => d.gateId == Slownik.gateId))
+            foreach (var foo in (from d in _context.wartosc_bramek
+                where d.gateId == Slownik.gateId
+                      && d.time < timesp && d.time > timesp1
+                orderby d.time
+                select d))
             {
                 points.Add(new DataPoint(
                     OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
@@ -135,7 +191,7 @@ namespace PrzegladBazy
 
             // Seria wykresu
             model.Series.Add(new OxyPlot.Series.LineSeries { ItemsSource = points });
-
+            Model1.Series.Clear();
             // Aktualizacja wykresu.
             Model1 = model;
         }
@@ -152,14 +208,7 @@ namespace PrzegladBazy
             //await _context.pomiary.LoadAsync();
 
             // Znajdz pierwszy wpis w słowniku, aby coś załadować
-            this.Slownik = _context.Slownik.First();
-
-           
-            var foo = (from d in _context.Slownik where _context.pomiary.Any(ed => ed.gateId == d.gateId) select d.LongGate).ToList();
-            foo.Sort();
-            slowniki.ItemsSource = foo;
-
-            slowniki.IsEnabled = true;
+            
 
             // Załaduj grupy z plików
             loadGroups();
@@ -213,9 +262,17 @@ namespace PrzegladBazy
 
                 // Lista tymczasowa do punktów wykresu.
                 var points = new List<DataPoint>();
+                if (data.SelectedDate == null)
+                    return;
 
+                var dataa = (DateTime)data.SelectedDate;
+                var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+                var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
                 // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-                foreach (var foo in _context.pomiary.Where(d => d.gateId == Slownik.gateId))
+                foreach (var foo in (from d in _context.wartosc_bramek
+                                     where d.gateId == Slownik.gateId
+                                     && d.time < timesp && d.time > timesp1
+                                     orderby d.time select d))
                 {
                     points.Add(new DataPoint(
                         OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
@@ -226,7 +283,7 @@ namespace PrzegladBazy
                 // Seria wykresu
                 model.Series.Add(new OxyPlot.Series.LineSeries { ItemsSource = points });
             }
-
+            Model1.Series.Clear();
             // Aktualizacja wykresu.
             Model1 = model;
         }
@@ -236,7 +293,7 @@ namespace PrzegladBazy
             return new SqlConnection(connectionString);
         }
 
-        private void CreateConnectionString(string server, string databaseName, string userName, string password)
+        public void ChangeDatabaseConnection(string server, string databaseName, string userName, string password)
         {
             var builder = new SqlConnectionStringBuilder
             {
@@ -249,14 +306,14 @@ namespace PrzegladBazy
                 Password = password // password
             };
             
-            _context.Database.Connection.ConnectionString = builder.ConnectionString;
-            _context.Database.Connection.Open();
+            _context.Database.Connection.ConnectionString = connectionString = builder.ConnectionString;
+            testDBConnections();
         }
 
 
         private void BtChangeConnection_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            (new DBUser(this)).Show();
         }
     }
     [Serializable]

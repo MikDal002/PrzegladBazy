@@ -10,16 +10,16 @@
 namespace PrzegladBazy.Models
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     
     public partial class uzytkownicy
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public uzytkownicy()
         {
-            this.pomiary = new ObservableCollection<pomiary>();
-            this.pomiary1 = new ObservableCollection<pomiary>();
-            this.pomiary2 = new ObservableCollection<pomiary>();
+            this.pomiary = new HashSet<pomiary>();
+            this.pomiary1 = new HashSet<pomiary>();
+            this.pomiary2 = new HashSet<pomiary>();
         }
     
         public string login { get; set; }
@@ -29,10 +29,10 @@ namespace PrzegladBazy.Models
         public int id { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<pomiary> pomiary { get; set; }
+        public virtual ICollection<pomiary> pomiary { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<pomiary> pomiary1 { get; set; }
+        public virtual ICollection<pomiary> pomiary1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<pomiary> pomiary2 { get; set; }
+        public virtual ICollection<pomiary> pomiary2 { get; set; }
     }
 }

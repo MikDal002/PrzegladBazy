@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="593772728aa240d189f2f836f91efd93" Name="Diagram1">
+        <EntityTypeShape EntityType="wizualizacja2Model.atrybuty_zdarzen" Width="1.5" PointX="5.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.grupy" Width="1.5" PointX="1.5" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.grupy_raportowe" Width="1.5" PointX="5.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.komunikaty" Width="1.5" PointX="5.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.miejsca_pomiaru" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.multicont" Width="1.5" PointX="7.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.pomiary" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.pracownik_sterowni" Width="1.5" PointX="7.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.rodzaje_bramek_zdarzen" Width="1.5" PointX="7.75" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.rodzaje_pomiarow" Width="1.5" PointX="0.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.Slownik" Width="1.5" PointX="9.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.slownik_bramek_zewnetrznych" Width="1.5" PointX="9.75" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.uprawnienia" Width="1.5" PointX="9.75" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.uprawnienia_sterowni" Width="1.5" PointX="5.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.uzytkownicy" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.wielkosci_mierzone" Width="1.5" PointX="11.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.zdarzenia_sterownia" Width="1.5" PointX="0.75" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.zewnetrzne_zrodla_zdarzen" Width="1.5" PointX="2.75" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.zmiany" Width="1.5" PointX="11.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.elementy_grup" Width="1.5" PointX="3.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.elementy_grup_raportowych" Width="1.5" PointX="11.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.objetosci_zbiornikow" Width="1.5" PointX="7.75" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.potwierdzone_komunikaty" Width="1.5" PointX="11.75" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.alarmy" Width="1.5" PointX="9.75" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.pomiary_reczne_v" Width="1.5" PointX="11.75" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.v_elementy_grup" Width="1.5" PointX="13.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.v_pomiary_grup" Width="1.5" PointX="13.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.wartosc_bramek" Width="1.5" PointX="4.75" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="wizualizacja2Model.wartosc_bramekver" Width="1.5" PointX="13.75" PointY="8.25" IsExpanded="true" />
+        <AssociationConnector Association="wizualizacja2Model.FK__elementy___idGru__117F9D94" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__miejsce__38996AB5" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__id_rodz__29572725" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__id_rodz__2C3393D0" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__id_rodz__2F10007B" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__idUzytk__2A4B4B5E" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__idUzytk__2D27B809" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.FK__pomiary__idUzytk__300424B4" ManuallyRouted="false" />
+        <AssociationConnector Association="wizualizacja2Model.pomiary_grup" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

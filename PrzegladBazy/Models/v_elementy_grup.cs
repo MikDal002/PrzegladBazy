@@ -12,15 +12,11 @@ namespace PrzegladBazy.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class pracownik_sterowni
+    public partial class v_elementy_grup
     {
-        public int id_pracownika { get; set; }
-        public string imie { get; set; }
-        public string nazwisko { get; set; }
-        public string haslo { get; set; }
-        public bool czy_admin { get; set; }
-        public string login { get; set; }
-        public bool aktywny { get; set; }
-        public string numer_telefonu { get; set; }
+        public int idGrupy { get; set; }
+        public string nazwa { get; set; }
+        public int gateId { get; set; }
+        public string description { get; set; }
     }
 }

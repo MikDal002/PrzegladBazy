@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,17 +27,28 @@ namespace PrzegladBazy
         /// <summary>
         /// Dostęp do danych z bazy
         /// </summary>
-        private wizualizacja2Entities _context = new wizualizacja2Entities();
+        private wizualizacja2Entities1 _context = new wizualizacja2Entities1();
         private MainWindow mainWindow;
 
         public CreateGroup(MainWindow mainWindow)
         {
             this.mainWindow = mainWindow;
             InitializeComponent();
-            foreach (var tocheck in _context.Slownik)
+            try
             {
-                LvToCheck.Items.Add(new CheckBox { Content = tocheck.LongGate, IsChecked = false });
+                if (!String.IsNullOrEmpty(mainWindow.connectionString))
+                    _context.Database.Connection.ConnectionString = mainWindow.connectionString;
+                
+                foreach (var tocheck in _context.Slownik)
+                {
+                    LvToCheck.Items.Add(new CheckBox { Content = tocheck.LongGate, IsChecked = false });
+                }
             }
+            catch (Exception e)
+            {
+            }
+
+            
         }
 
         private void Button_ToRight_Click(object sender, RoutedEventArgs e)

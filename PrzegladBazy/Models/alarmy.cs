@@ -12,15 +12,10 @@ namespace PrzegladBazy.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class pracownik_sterowni
+    public partial class alarmy
     {
-        public int id_pracownika { get; set; }
-        public string imie { get; set; }
-        public string nazwisko { get; set; }
-        public string haslo { get; set; }
-        public bool czy_admin { get; set; }
-        public string login { get; set; }
-        public bool aktywny { get; set; }
-        public string numer_telefonu { get; set; }
+        public string Text { get; set; }
+        public string Name { get; set; }
+        public Nullable<System.DateTime> czas { get; set; }
     }
 }

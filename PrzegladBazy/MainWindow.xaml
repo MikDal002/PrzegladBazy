@@ -8,9 +8,9 @@
             <TextBlock Text="Jeden typ pomiaru"/>
             <ComboBox x:Name="slowniki"/>
             <TextBlock Text="Grupa pomiarów"/>
-            <ComboBox x:Name="grupySlownikow" DropDownClosed="GrupySlownikow_OnDropDownClosed"/>
-        
-        <Grid MaxWidth="200" VerticalAlignment="Top">
+            <ComboBox x:Name="grupySlownikow"/>
+            <DatePicker x:Name="data"/>
+            <Grid MaxWidth="200" VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
