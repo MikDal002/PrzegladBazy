@@ -36,8 +36,8 @@ namespace PrzegladBazy
             InitializeComponent();
             try
             {
-                if (!String.IsNullOrEmpty(mainWindow.connectionString))
-                    _context.Database.Connection.ConnectionString = mainWindow.connectionString;
+                if (!String.IsNullOrEmpty(mainWindow.ConnectionString))
+                    _context.Database.Connection.ConnectionString = mainWindow.ConnectionString;
                 
                 foreach (var tocheck in _context.Slownik)
                 {

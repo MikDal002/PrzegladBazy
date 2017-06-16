@@ -73,7 +73,10 @@ namespace PrzegladBazy
             }
         }
         private PlotModel _model1 = new PlotModel();
-        public string connectionString;
+        /// <summary>
+        /// Ciąg znaków definiujący połączenie z bazą danych.
+        /// </summary>
+        public string ConnectionString;
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -83,12 +86,17 @@ namespace PrzegladBazy
             this.DataContext = this;
 
             grupySlownikow.ItemsSource = Groups;
-            Task.Run(() => testDBConnections());
-
+            // Sprawdz Poprawnosć połączenia z bazą danych
+            Task.Run(() => TestDbConnections());
         }
-
-        private void testDBConnections()
+        /// <summary>
+        /// Funkcja testująca poprawność połączenia z bazą danych, a co za tym idzie
+        /// zmienia właściwości kontrolek, tak aby niemożliwe było wykoanie operacji 
+        /// na bazie danych.
+        /// </summary>
+        private void TestDbConnections()
         {
+            // Zablokuj elementy które pozwalają na wykonanie operacji na bazie danych
             Dispatcher.Invoke(() =>
             {
                 slowniki.IsEnabled = false;
@@ -97,42 +105,29 @@ namespace PrzegladBazy
                 grupySlownikow.DropDownClosed -= GrupySlownikow_OnDropDownClosed;
             });
             
-
             try
             {
-                _context.Database.Connection.Open();
+                // Pobierz słowniki z bazy danych
+                this.Slownik = _context.Slownik.First();
+                var foo = (from d in _context.Slownik orderby d.LongGate select d.LongGate).ToList();
+
+                // Zaktualizuj interfejs graficzny
                 Dispatcher.Invoke(() =>
                 {
-                    slowniki.DropDownClosed += Slowniki_DropDownClosed;
-                    grupySlownikow.DropDownClosed += GrupySlownikow_OnDropDownClosed;
-                    var foo = (from d in _context.Slownik orderby d.LongGate select d.LongGate).ToList();
-
                     slowniki.ItemsSource = foo;
 
                     slowniki.IsEnabled = true;
                     grupySlownikow.IsEnabled = true;
+
+                    slowniki.DropDownClosed += Slowniki_DropDownClosed;
+                    grupySlownikow.DropDownClosed += GrupySlownikow_OnDropDownClosed;
                 });
-                
-                
-                this.Slownik = _context.Slownik.First();
-
-
-                
-
             }
             catch (SqlException e)
             {
                 Debug.WriteLine(e);
             }
-            finally
-            {
-                _context.Database.Connection.Close();
-            }
-
-
-            
         }
-
         /// <summary>
         /// Zdarzenie wywoływane każdorazowo przy zmianie którejś z właściwości klasy.
         /// </summary>
@@ -156,29 +151,9 @@ namespace PrzegladBazy
             // Jeśli nic nie wybrano
             if (slowniki.SelectedValue == null)
                 return;
-
-            // Odnajdź wybraną pozycję w bazie.
-            Slownik = _context.Slownik.First(d => d.LongGate == (string)slowniki.SelectedValue);
             
             // Lista tymczasowa do punktów wykresu.
-            var points = new List<DataPoint>();
-            if (data.SelectedDate == null)
-                return;
-            var dataa = (DateTime)data.SelectedDate;
-            var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
-            var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
-            // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-            foreach (var foo in (from d in _context.wartosc_bramek
-                where d.gateId == Slownik.gateId
-                      && d.time < timesp && d.time > timesp1
-                orderby d.time
-                select d))
-            {
-                points.Add(new DataPoint(
-                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
-                    Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value
-                    ));
-            }
+            var points = MakeDataSeries((string)slowniki.SelectedValue);
 
             // Wygląd wykresu
             var model = new PlotModel { Title = Slownik.LongGate };
@@ -203,17 +178,7 @@ namespace PrzegladBazy
         /// <param name="e"></param>
         async private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Załaduj dane z bazy
-            //await _context.Slownik.LoadAsync();
-            //await _context.pomiary.LoadAsync();
-
-            // Znajdz pierwszy wpis w słowniku, aby coś załadować
-            
-
-            // Załaduj grupy z plików
             loadGroups();
-
-            
         }
 
         private void loadGroups()
@@ -242,12 +207,14 @@ namespace PrzegladBazy
             if (grupySlownikow.SelectedValue == null)
                 return;
 
+            
+
             // Odnajdź wszystkie słowniki z grupy w bazie.
             var grupa = grupySlownikow.SelectionBoxItem as SlownikGroup;
             List<Slownik> grupaPrSlow = new List<Slownik>();
 
             // Wygląd wykresu
-            var model = new PlotModel { Title = grupa._title};
+            var model = new PlotModel { Title = grupa._title };
             model.Axes.Add(new OxyPlot.Axes.DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
@@ -258,27 +225,7 @@ namespace PrzegladBazy
             // tworzenie serii danych
             foreach (var grp in grupa._slowniki)
             {
-                Slownik Slownik = _context.Slownik.First(d => d.LongGate == grp);
-
-                // Lista tymczasowa do punktów wykresu.
-                var points = new List<DataPoint>();
-                if (data.SelectedDate == null)
-                    return;
-
-                var dataa = (DateTime)data.SelectedDate;
-                var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
-                var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
-                // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-                foreach (var foo in (from d in _context.wartosc_bramek
-                                     where d.gateId == Slownik.gateId
-                                     && d.time < timesp && d.time > timesp1
-                                     orderby d.time select d))
-                {
-                    points.Add(new DataPoint(
-                        OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
-                        /*Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value*/ foo.value
-                    ));
-                }
+                var points = MakeDataSeries(grp);
 
                 // Seria wykresu
                 model.Series.Add(new OxyPlot.Series.LineSeries { ItemsSource = points });
@@ -286,6 +233,34 @@ namespace PrzegladBazy
             Model1.Series.Clear();
             // Aktualizacja wykresu.
             Model1 = model;
+        }
+
+        private List<DataPoint> MakeDataSeries(string LongGate)
+        {
+            Slownik Slownik = _context.Slownik.First(d => d.LongGate == LongGate);
+
+            // Lista tymczasowa do punktów wykresu.
+            var points = new List<DataPoint>();
+            if (data.SelectedDate == null)
+                return points;
+
+            var dataa = (DateTime) data.SelectedDate;
+            var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+            var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
+            // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
+            foreach (var foo in (from d in _context.wartosc_bramek
+                where d.gateId == Slownik.gateId
+                      && d.time < timesp && d.time > timesp1
+                orderby d.time
+                select d))
+            {
+                points.Add(new DataPoint(
+                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
+                    /*Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value*/
+                    foo.value
+                ));
+            }
+            return points;
         }
 
         private DbConnection CreateConnection(string connectionString)
@@ -306,8 +281,8 @@ namespace PrzegladBazy
                 Password = password // password
             };
             
-            _context.Database.Connection.ConnectionString = connectionString = builder.ConnectionString;
-            testDBConnections();
+            _context.Database.Connection.ConnectionString = ConnectionString = builder.ConnectionString;
+            TestDbConnections();
         }
 
 
