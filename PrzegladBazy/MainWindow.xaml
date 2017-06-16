@@ -70,7 +70,7 @@
             <TextBlock Text="{Binding Slownik.rodz_dla_zdarz}" Grid.Column="1" Grid.Row="11" />
             
             </Grid>
-            <Button Content="Utwórz grupę"  Click="ButtonBase_OnClick" Margin="0,0,0,5" />
+            <Button Content="Utwórz grupę"  Click="ButtonCreateGroup_OnClick" Margin="0,0,0,5" />
             <Button Content="Zmień bazę danych" x:Name="btChangeConnection" Click="BtChangeConnection_OnClick" />
         </StackPanel>
             <Grid>
