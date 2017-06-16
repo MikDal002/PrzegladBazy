@@ -10,23 +10,23 @@
 namespace PrzegladBazy.Models
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     
     public partial class grupy
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public grupy()
         {
-            this.elementy_grup = new ObservableCollection<elementy_grup>();
-            this.rodzaje_pomiarow = new ObservableCollection<rodzaje_pomiarow>();
+            this.elementy_grup = new HashSet<elementy_grup>();
+            this.rodzaje_pomiarow = new HashSet<rodzaje_pomiarow>();
         }
     
         public int idGrupy { get; set; }
         public string nazwa { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<elementy_grup> elementy_grup { get; set; }
+        public virtual ICollection<elementy_grup> elementy_grup { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ObservableCollection<rodzaje_pomiarow> rodzaje_pomiarow { get; set; }
+        public virtual ICollection<rodzaje_pomiarow> rodzaje_pomiarow { get; set; }
     }
 }

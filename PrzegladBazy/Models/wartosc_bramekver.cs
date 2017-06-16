@@ -12,15 +12,16 @@ namespace PrzegladBazy.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class pracownik_sterowni
+    public partial class wartosc_bramekver
     {
-        public int id_pracownika { get; set; }
-        public string imie { get; set; }
-        public string nazwisko { get; set; }
-        public string haslo { get; set; }
-        public bool czy_admin { get; set; }
-        public string login { get; set; }
-        public bool aktywny { get; set; }
-        public string numer_telefonu { get; set; }
+        public string LongGate { get; set; }
+        public string description { get; set; }
+        public string rodzajBramki { get; set; }
+        public string rodzajPomiaru { get; set; }
+        public double value { get; set; }
+        public byte idStacji { get; set; }
+        public Nullable<System.DateTime> cos { get; set; }
+        public Nullable<System.DateTime> czas { get; set; }
+        public int gateId { get; set; }
     }
 }
