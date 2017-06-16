@@ -18,16 +18,16 @@
         </Grid.RowDefinitions>
         <ListView x:Name="LvToCheck" Grid.Column="0" VerticalContentAlignment="Top" />
         
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Click="Button_ToRight_Click" MinWidth="30">»</Button>
             <Button Click="Button_ToLeft_CLick">«</Button>
         </StackPanel>
         
         
-        <ListView x:Name="LvChecked" Grid.Column="2" VerticalContentAlignment="Top" />
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Grid.ColumnSpan="3">
+        <ListView x:Name="LvChecked" Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Top" />
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Grid.ColumnSpan="3" Grid.Column="0">
             <TextBlock Text="Nazwa grupy:" />
-            <TextBox x:Name="tbGroupName" MinWidth="100"/>
+            <TextBox x:Name="TbGroupName" MinWidth="100"/>
             <Button Click="Button_Save_Click" Content="Zapisz"/>
         </StackPanel>
     </Grid>

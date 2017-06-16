@@ -106,6 +106,7 @@
     <Compile Include="DBUser.xaml.cs">
       <DependentUpon>DBUser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SlownikGroup.cs" />
     <Page Include="CreateGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -262,6 +263,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="PrzegladBazy_TemporaryKey.pfx" />
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

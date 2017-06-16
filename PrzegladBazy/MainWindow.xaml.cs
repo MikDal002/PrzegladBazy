@@ -35,13 +35,13 @@ namespace PrzegladBazy
     /// <summary>
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : INotifyPropertyChanged
     {
         public ObservableCollection<SlownikGroup> Groups = new ObservableCollection<SlownikGroup>();
         /// <summary>
         /// Dostęp do danych z bazy
         /// </summary>
-        private wizualizacja2Entities1 _context = new wizualizacja2Entities1();
+        private readonly wizualizacja2Entities1 _context = new wizualizacja2Entities1();
         /// <summary>
         /// Reprezentuje aktualnie wybrane słowo z słownika
         /// </summary>
@@ -73,22 +73,34 @@ namespace PrzegladBazy
             }
         }
         private PlotModel _model1 = new PlotModel();
-        public string connectionString;
+        /// <summary>
+        /// Ciąg znaków definiujący połączenie z bazą danych.
+        /// </summary>
+        public string ConnectionString;
+        /// <summary>
+        /// Zdarzenie wywoływane każdorazowo przy zmianie którejś z właściwości klasy.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// Konstruktor
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
 
             grupySlownikow.ItemsSource = Groups;
-            Task.Run(() => testDBConnections());
-
+            // Sprawdz Poprawnosć połączenia z bazą danych
+            Task.Run(() => TestDbConnections());
         }
-
-        private void testDBConnections()
+        /// <summary>
+        /// Funkcja testująca poprawność połączenia z bazą danych, a co za tym idzie
+        /// zmienia właściwości kontrolek, tak aby niemożliwe było wykoanie operacji 
+        /// na bazie danych.
+        /// </summary>
+        private void TestDbConnections()
         {
+            // Zablokuj elementy które pozwalają na wykonanie operacji na bazie danych
             Dispatcher.Invoke(() =>
             {
                 slowniki.IsEnabled = false;
@@ -97,46 +109,29 @@ namespace PrzegladBazy
                 grupySlownikow.DropDownClosed -= GrupySlownikow_OnDropDownClosed;
             });
             
-
             try
             {
-                _context.Database.Connection.Open();
+                // Pobierz słowniki z bazy danych
+                Slownik = _context.Slownik.First();
+                var foo = (from d in _context.Slownik orderby d.LongGate select d.LongGate).ToList();
+
+                // Zaktualizuj interfejs graficzny
                 Dispatcher.Invoke(() =>
                 {
-                    slowniki.DropDownClosed += Slowniki_DropDownClosed;
-                    grupySlownikow.DropDownClosed += GrupySlownikow_OnDropDownClosed;
-                    var foo = (from d in _context.Slownik orderby d.LongGate select d.LongGate).ToList();
-
                     slowniki.ItemsSource = foo;
 
                     slowniki.IsEnabled = true;
                     grupySlownikow.IsEnabled = true;
+
+                    slowniki.DropDownClosed += Slowniki_DropDownClosed;
+                    grupySlownikow.DropDownClosed += GrupySlownikow_OnDropDownClosed;
                 });
-                
-                
-                this.Slownik = _context.Slownik.First();
-
-
-                
-
             }
             catch (SqlException e)
             {
                 Debug.WriteLine(e);
             }
-            finally
-            {
-                _context.Database.Connection.Close();
-            }
-
-
-            
         }
-
-        /// <summary>
-        /// Zdarzenie wywoływane każdorazowo przy zmianie którejś z właściwości klasy.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
         /// <summary>
         /// Funkcja wywołująca zdarzenie PropertyChanged.
         /// </summary>
@@ -156,29 +151,9 @@ namespace PrzegladBazy
             // Jeśli nic nie wybrano
             if (slowniki.SelectedValue == null)
                 return;
-
-            // Odnajdź wybraną pozycję w bazie.
-            Slownik = _context.Slownik.First(d => d.LongGate == (string)slowniki.SelectedValue);
             
             // Lista tymczasowa do punktów wykresu.
-            var points = new List<DataPoint>();
-            if (data.SelectedDate == null)
-                return;
-            var dataa = (DateTime)data.SelectedDate;
-            var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
-            var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
-            // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-            foreach (var foo in (from d in _context.wartosc_bramek
-                where d.gateId == Slownik.gateId
-                      && d.time < timesp && d.time > timesp1
-                orderby d.time
-                select d))
-            {
-                points.Add(new DataPoint(
-                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
-                    Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value
-                    ));
-            }
+            var points = MakeDataSeries((string)slowniki.SelectedValue);
 
             // Wygląd wykresu
             var model = new PlotModel { Title = Slownik.LongGate };
@@ -197,29 +172,19 @@ namespace PrzegladBazy
         }
         /// <summary>
         /// Funkcja wywoływana zaraz po załadowaniu okna. 
-        /// Ładuje ona wszystkie dostępne dane z bazy.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        async private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Załaduj dane z bazy
-            //await _context.Slownik.LoadAsync();
-            //await _context.pomiary.LoadAsync();
-
-            // Znajdz pierwszy wpis w słowniku, aby coś załadować
-            
-
-            // Załaduj grupy z plików
-            loadGroups();
-
-            
+            LoadGroups();
         }
-
-        private void loadGroups()
+        /// <summary>
+        /// Funkcja ta ładuje grupy, które zostały zapisane na dysku.
+        /// </summary>
+        private void LoadGroups()
         {
-            List<string> grp = null;
-            string path = @".\Groups\";
+            const string path = @".\Groups\";
             var files = Directory.GetFiles(path, "*.xml");
 
             XmlSerializer serializer = new XmlSerializer(typeof(SlownikGroup));
@@ -230,12 +195,25 @@ namespace PrzegladBazy
                 reader.Close();
             }
         }
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Reakcja na naciśnięcie przycisku - powoduje otwaracie okna w którym możliwe jest 
+        /// stworzenie nowej grupy.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonCreateGroup_OnClick(object sender, RoutedEventArgs e)
         {
             var okno = new CreateGroup(this);
             okno.Show();
         }
-
+        /// <summary>
+        /// Reakcja na zamknięcie listy rozwijanej wyboru grup słowników.
+        /// 
+        /// Zamknięcie jest równoznaczne z załadowaniem całej grupy do pamięci i wyrysowanie
+        /// wykresu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GrupySlownikow_OnDropDownClosed(object sender, EventArgs e)
         {
             // Jeśli nic nie wybrano
@@ -244,10 +222,12 @@ namespace PrzegladBazy
 
             // Odnajdź wszystkie słowniki z grupy w bazie.
             var grupa = grupySlownikow.SelectionBoxItem as SlownikGroup;
-            List<Slownik> grupaPrSlow = new List<Slownik>();
+
+            if (grupa == null)
+                return;
 
             // Wygląd wykresu
-            var model = new PlotModel { Title = grupa._title};
+            var model = new PlotModel { Title = grupa.Title };
             model.Axes.Add(new OxyPlot.Axes.DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
@@ -256,29 +236,9 @@ namespace PrzegladBazy
             model.Axes.Add(new OxyPlot.Axes.LinearAxis { Position = AxisPosition.Right });
 
             // tworzenie serii danych
-            foreach (var grp in grupa._slowniki)
+            foreach (var grp in grupa.Slowniki)
             {
-                Slownik Slownik = _context.Slownik.First(d => d.LongGate == grp);
-
-                // Lista tymczasowa do punktów wykresu.
-                var points = new List<DataPoint>();
-                if (data.SelectedDate == null)
-                    return;
-
-                var dataa = (DateTime)data.SelectedDate;
-                var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
-                var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
-                // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
-                foreach (var foo in (from d in _context.wartosc_bramek
-                                     where d.gateId == Slownik.gateId
-                                     && d.time < timesp && d.time > timesp1
-                                     orderby d.time select d))
-                {
-                    points.Add(new DataPoint(
-                        OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
-                        /*Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value*/ foo.value
-                    ));
-                }
+                var points = MakeDataSeries(grp);
 
                 // Seria wykresu
                 model.Series.Add(new OxyPlot.Series.LineSeries { ItemsSource = points });
@@ -287,12 +247,47 @@ namespace PrzegladBazy
             // Aktualizacja wykresu.
             Model1 = model;
         }
-
-        private DbConnection CreateConnection(string connectionString)
+        /// <summary>
+        /// Metoda która na podstawie LongID (odnoszącego się do słownika) zwraca listę
+        /// punktów pobranych z bazy danych.
+        /// </summary>
+        /// <param name="longGate"></param>
+        /// <returns></returns>
+        private List<DataPoint> MakeDataSeries(string longGate)
         {
-            return new SqlConnection(connectionString);
-        }
+            var slownik = _context.Slownik.First(d => d.LongGate == longGate);
 
+            // Lista tymczasowa do punktów wykresu.
+            var points = new List<DataPoint>();
+            if (data.SelectedDate == null)
+                return points;
+
+            var dataa = (DateTime) data.SelectedDate;
+            var timesp = dataa.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+            var timesp1 = dataa.Subtract(new DateTime(1970, 1, 2)).TotalMilliseconds;
+            
+            // Utwórz punkty wykresu dla każdego odnalezionego pomiaru
+            foreach (var foo in (from d in _context.wartosc_bramek
+                where d.gateId == slownik.gateId
+                      && d.time < timesp && d.time > timesp1
+                orderby d.time
+                select d))
+            {
+                points.Add(new DataPoint(
+                    OxyPlot.Axes.DateTimeAxis.ToDouble(new DateTime(1970, 1, 1).AddMilliseconds(foo.time)),
+                    /*Slownik.rodzajPomiaru.Equals("D", StringComparison.OrdinalIgnoreCase) ? foo.value < 1 ? 0 : 1 : foo.value*/
+                    foo.value
+                ));
+            }
+            return points;
+        }
+        /// <summary>
+        /// Funkcja ta powoduje zmianę połączenia bazy danych.
+        /// </summary>
+        /// <param name="server">Nazwa serwera</param>
+        /// <param name="databaseName">Nazwa bazy danych</param>
+        /// <param name="userName">Użytkownik</param>
+        /// <param name="password">Hasło</param>
         public void ChangeDatabaseConnection(string server, string databaseName, string userName, string password)
         {
             var builder = new SqlConnectionStringBuilder
@@ -306,33 +301,18 @@ namespace PrzegladBazy
                 Password = password // password
             };
             
-            _context.Database.Connection.ConnectionString = connectionString = builder.ConnectionString;
-            testDBConnections();
+            _context.Database.Connection.ConnectionString = ConnectionString = builder.ConnectionString;
+            TestDbConnections();
         }
-
-
+        /// <summary>
+        /// Reakcja na naciśnięcie przycisku - powoduje otwarcie nowego okna, gdzie możliwa jest 
+        /// zmiana parametrów połączenia z bazą danych.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtChangeConnection_OnClick(object sender, RoutedEventArgs e)
         {
-            (new DBUser(this)).Show();
+            (new DbUser(this)).Show();
         }
     }
-    [Serializable]
-    public class SlownikGroup
-    {
-        public List<string> _slowniki = new List<string>();
-        public string _title = null;
-        
-
-        public SlownikGroup()
-        {
-            _title = "noname";
-        }
-
-        public override string ToString()
-        {
-            return _title;
-        }
-    }
-
-    
 }
