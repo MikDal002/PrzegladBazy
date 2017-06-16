@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,21 +23,29 @@ namespace PrzegladBazy
     /// <summary>
     /// Logika interakcji dla klasy CreateGroup.xaml
     /// </summary>
-    public partial class CreateGroup : Window
+    public partial class CreateGroup
     {
         /// <summary>
         /// Dostęp do danych z bazy
         /// </summary>
-        private wizualizacja2Entities1 _context = new wizualizacja2Entities1();
-        private MainWindow mainWindow;
-
+        private readonly wizualizacja2Entities1 _context = new wizualizacja2Entities1();
+        /// <summary>
+        /// Okno główne programu. 
+        /// Generalnie ten wskaźnik należy usunąć, bo możliwe jest wykonanie tego połączenia
+        /// bez bezpośredniego połączenia z oknem głównym.
+        /// </summary>
+        private readonly MainWindow _mainWindow;
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="mainWindow">Uchwyt do okna głównego aplikacji</param>
         public CreateGroup(MainWindow mainWindow)
         {
-            this.mainWindow = mainWindow;
+            _mainWindow = mainWindow;
             InitializeComponent();
             try
             {
-                if (!String.IsNullOrEmpty(mainWindow.ConnectionString))
+                if (!string.IsNullOrEmpty(mainWindow.ConnectionString))
                     _context.Database.Connection.ConnectionString = mainWindow.ConnectionString;
                 
                 foreach (var tocheck in _context.Slownik)
@@ -46,15 +55,22 @@ namespace PrzegladBazy
             }
             catch (Exception e)
             {
+                Debug.WriteLine(e.StackTrace);
             }
 
             
         }
-
+        /// <summary>
+        /// Odpowiedź na naciśnięcie przycisku "do prawej".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ToRight_Click(object sender, RoutedEventArgs e)
         {
+            // Odczytaj zaznaczone elementy z lewego okna
             var listaTmp = (from object tochec in LvToCheck.Items select tochec as CheckBox into toCheck where !(toCheck is null) where toCheck.IsChecked == true select toCheck).ToList();
 
+            // Przesuń elementy do prawej listy.
             foreach (var elem in listaTmp)
             {
                 elem.IsChecked = false;
@@ -63,11 +79,17 @@ namespace PrzegladBazy
             }
             
         }
-
+        /// <summary>
+        /// Przycisk "do lewej".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_ToLeft_CLick(object sender, RoutedEventArgs e)
         {
+            // Odczytaj zaznaczone elementy z prawej listy
             var listaTmp = (from object tochec in LvChecked.Items select tochec as CheckBox into toCheck where !(toCheck is null) where toCheck.IsChecked == true select toCheck).ToList();
 
+            // Przesuń elementy do listy po lewej
             foreach (var elem in listaTmp)
             {
                 elem.IsChecked = false;
@@ -75,28 +97,44 @@ namespace PrzegladBazy
                 LvToCheck.Items.Add(elem);
             }
         }
-
+        /// <summary>
+        /// Przycisk "zapisz" grupę.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Save_Click(object sender, RoutedEventArgs e)
         {
-            List<string> _grupa = new List<string>();
+            var grupa = new List<string>();
+
+            // Pobierz elementy z prawej listy
             foreach (var item in LvChecked.Items)
             {
                 var chb = item as CheckBox;
                 if (chb == null)
                     continue;
                 
-                _grupa.Add(chb.Content.ToString());
+                grupa.Add(chb.Content.ToString());
             }
-            var slgrp = new SlownikGroup();
-            slgrp.Title = tbGroupName.Text;
-            slgrp.Slowniki = _grupa;
+
+            // Utwórz nową grupę słowników
+            var slgrp = new SlownikGroup
+            {
+                Title = TbGroupName.Text,
+                Slowniki = grupa
+            };
+
+            // Zapisz nową grupę do pliku
+            // TODO: Poniższa ścieżka powinna być stałą!
             XmlSerializer xs = new XmlSerializer(typeof(SlownikGroup));
-            var sciezka = System.IO.Path.GetFullPath(@".\Groups\" + tbGroupName.Text + @".xml");
-            new FileInfo(sciezka).Directory.Create();
+            var sciezka = System.IO.Path.GetFullPath(@".\Groups\" + TbGroupName.Text + @".xml");
+            (new FileInfo(sciezka).Directory)?.Create();
+
             TextWriter tw = new StreamWriter(sciezka);
             xs.Serialize(tw, slgrp);
-            mainWindow.Groups.Add(slgrp);
-            this.Close();
+
+            // Dodaj grupę do listy w oknie głównym.
+            _mainWindow.Groups.Add(slgrp);
+            Close();
         }
     }
 }
