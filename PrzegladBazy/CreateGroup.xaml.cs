@@ -88,8 +88,8 @@ namespace PrzegladBazy
                 _grupa.Add(chb.Content.ToString());
             }
             var slgrp = new SlownikGroup();
-            slgrp._title = tbGroupName.Text;
-            slgrp._slowniki = _grupa;
+            slgrp.Title = tbGroupName.Text;
+            slgrp.Slowniki = _grupa;
             XmlSerializer xs = new XmlSerializer(typeof(SlownikGroup));
             var sciezka = System.IO.Path.GetFullPath(@".\Groups\" + tbGroupName.Text + @".xml");
             new FileInfo(sciezka).Directory.Create();

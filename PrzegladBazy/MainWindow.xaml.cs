@@ -227,7 +227,7 @@ namespace PrzegladBazy
                 return;
 
             // Wygląd wykresu
-            var model = new PlotModel { Title = grupa._title };
+            var model = new PlotModel { Title = grupa.Title };
             model.Axes.Add(new OxyPlot.Axes.DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
@@ -236,7 +236,7 @@ namespace PrzegladBazy
             model.Axes.Add(new OxyPlot.Axes.LinearAxis { Position = AxisPosition.Right });
 
             // tworzenie serii danych
-            foreach (var grp in grupa._slowniki)
+            foreach (var grp in grupa.Slowniki)
             {
                 var points = MakeDataSeries(grp);
 
