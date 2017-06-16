@@ -312,7 +312,7 @@ namespace PrzegladBazy
         /// <param name="e"></param>
         private void BtChangeConnection_OnClick(object sender, RoutedEventArgs e)
         {
-            (new DBUser(this)).Show();
+            (new DbUser(this)).Show();
         }
     }
 }
